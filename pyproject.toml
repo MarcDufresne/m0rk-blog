@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "m0rk-blog"
+version = "0.1.0"
+description = ""
+authors = ["MarcDufresne <marc.andre.dufresne@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+pelican = "^3.7"
+markdown = "^2.6"
+
+[tool.poetry.dev-dependencies]
