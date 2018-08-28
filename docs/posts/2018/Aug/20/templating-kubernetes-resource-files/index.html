@@ -168,8 +168,10 @@ SERVICE_PORT=7777
 </pre></div>
 
 
-<p>Or maybe we want to change the <code>SERVICE_PORT</code>.</p>
-<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml -s <span class="nv">SERVICE_PORT</span><span class="o">=</span><span class="m">8888</span>
+<p>Or maybe we want to change the <code>SERVICE_PORT</code> and <code>DOCKER_TAG</code>.</p>
+<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml <span class="se">\</span>
+    -s <span class="nv">SERVICE_PORT</span><span class="o">=</span><span class="m">8888</span> <span class="se">\</span>
+    -s <span class="nv">DOCKER_TAG</span><span class="o">=</span><span class="s2">&quot;4.0.11&quot;</span>
 </pre></div>
 
 
@@ -187,6 +189,8 @@ directly on your cluster.</p>
 <li>Configuring your domain names per stage.</li>
 <li>Etc.</li>
 </ul>
+<p>You can find the full example of the above files on the
+<a href="https://github.com/MarcDufresne/m0rk-blog-examples/tree/master/kubetpl-templates">blog's examples repo</a>.</p>
     </div>
 
     <footer>
