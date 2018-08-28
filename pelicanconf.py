@@ -9,6 +9,8 @@ SITEURL = ''
 PATH = 'content'
 OUTPUT_PATH = 'docs/'
 
+THEME = 'm0rk-theme'
+
 TIMEZONE = 'America/Montreal'
 
 DEFAULT_LANG = u'en'
@@ -30,14 +32,10 @@ CATEGORY_URL = 'category/{slug}/'
 CATEGORY_SAVE_AS = 'category/{slug}/index.html'
 
 # Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
+LINKS = (('GitHub', 'https://github.com/MarcDufresne'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('GitHub', 'https://github.com/MarcDufresne'),)
 
 DEFAULT_PAGINATION = 10
 
@@ -45,3 +43,9 @@ DEFAULT_PAGINATION = 10
 RELATIVE_URLS = True
 
 GOOGLE_ANALYTICS = "UA-49795505-2"
+
+MEDIUS_AUTHORS = {
+    "MarcDufresne": {
+        "image": "https://avatars0.githubusercontent.com/u/599102?s=120&v=4"
+    }
+}
