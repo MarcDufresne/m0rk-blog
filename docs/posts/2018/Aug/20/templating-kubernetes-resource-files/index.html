@@ -51,7 +51,142 @@
     </div>
 
     <div class="entry-content">
-        <p>Some Example Text</p>
+        <p>When deploying web applications, or any other type of application, it is
+often needed or at least very useful to have different versions (or stages)
+of it deployed. Those usually are Dev, Staging, Production and so on. However,
+it becomes quite a pain to manage different versions of each of your
+<a href="https://kubernetes.io/">Kubernetes</a> resource files.</p>
+<p>Enter <a href="https://github.com/shyiko/kubetpl"><code>kubetpl</code></a>, a templating engine purpose
+built for Kubernetes resource files. It works across all major OSes and is super easy
+to install and use. Here are some of its features:</p>
+<ul>
+<li>Multiple choice of template flavors. Choose from Bash, Go or Template style.</li>
+<li>Support for loading <code>.env</code> files.</li>
+<li>Fail fast in case of undefined variable(s).</li>
+</ul>
+<p>Let's go through the initial setup and example usage below.</p>
+<p>First, you will need to download <code>kubetpl</code> and add it to your <code>$PATH</code>. To download on
+macOS or Linux you can use the following command, and on Windows you can get the
+executable <a href="https://github.com/shyiko/kubetpl/releases">here</a>.</p>
+<div class="highlight"><pre><span></span>$ curl -o kubetpl <span class="se">\</span>
+    -sSL https://github.com/shyiko/kubetpl/releases/download/0.7.1/kubetpl-0.7.1-<span class="k">$(</span>
+      bash -c <span class="s1">&#39;[[ $OSTYPE == darwin* ]] &amp;&amp; echo darwin || echo linux&#39;</span>
+    <span class="k">)</span>-amd64
+$ chmod a+x kubetpl
+</pre></div>
+
+
+<p>Once you're done with the steps above you can move <code>kubetpl</code> to a directory that's
+on your <code>$PATH</code>. One possible location is <code>/usr/local/bin</code>, here's how we can move
+the program there:</p>
+<div class="highlight"><pre><span></span>$ mv kubetpl /usr/local/bin/
+</pre></div>
+
+
+<p><em>On Linux you'll most likely need to use <code>sudo</code> to move the file</em></p>
+<p>You should now be able to use <code>kubetpl</code> directly from anywhere.</p>
+<p>Now, let's get to the main event, writing our templates and rendering them with <code>kubetpl</code>.</p>
+<p>You will want to start by creating your template file(s), let's look at the example below. It defines a Deployment
+of one <a href="https://redis.io/"><code>redis</code></a> container, exposed to the cluster via a Service. We will be using the Bash style
+templating (note the <code># kubetpl:syntax:$</code> line at the beginning).</p>
+<p><strong><code>resources.yaml</code></strong></p>
+<div class="highlight"><pre><span></span><span class="c1"># kubetpl:syntax:$</span>
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">kind</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="l l-Scalar l-Scalar-Plain">metadata</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$DEPLOYMENT_NAME</span>
+  <span class="l l-Scalar l-Scalar-Plain">namespace</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$STAGE</span>
+<span class="l l-Scalar l-Scalar-Plain">spec</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">replicas</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+  <span class="l l-Scalar l-Scalar-Plain">selector</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">matchLabels</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">app</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$APP_LABEL</span>
+  <span class="l l-Scalar l-Scalar-Plain">template</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">spec</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">containers</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$CONTAINER_NAME</span>
+          <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">redis:$DOCKER_TAG</span>
+          <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">containerPort</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">6379</span>
+            <span class="l l-Scalar l-Scalar-Plain">protocol</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TCP</span>
+            <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$PORT_NAME</span>
+    <span class="l l-Scalar l-Scalar-Plain">metadata</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">labels</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">app</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$APP_LABEL</span>
+
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">kind</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="l l-Scalar l-Scalar-Plain">metadata</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$SERVICE_NAME</span>
+  <span class="l l-Scalar l-Scalar-Plain">namespace</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$STAGE</span>
+<span class="l l-Scalar l-Scalar-Plain">spec</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">NodePort</span>
+  <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$SERVICE_PORT</span>
+      <span class="l l-Scalar l-Scalar-Plain">targetPort</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">6379</span>
+      <span class="l l-Scalar l-Scalar-Plain">protocol</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TCP</span>
+  <span class="l l-Scalar l-Scalar-Plain">selector</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">$APP_LABEL</span>
+</pre></div>
+
+
+<p>As you can see we can use variables for any value inside the file. Now let's render this template. <code>kubetpl</code> provides
+the <code>render</code> command to, you guessed it, render a template, we can also pass values for our variables using the <code>-s</code>
+argument, let's try it:</p>
+<div class="highlight"><pre><span></span>kubetpl render resources.yaml <span class="se">\</span>
+    -s <span class="nv">DEPLOYMENT_NAME</span><span class="o">=</span><span class="s2">&quot;redis-deployment&quot;</span> <span class="se">\</span>
+    -s <span class="nv">SERVICE_NAME</span><span class="o">=</span><span class="s2">&quot;redis-service&quot;</span> <span class="se">\</span>
+    -s <span class="nv">STAGE</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span> <span class="se">\</span>
+    -s <span class="nv">APP_LABEL</span><span class="o">=</span><span class="s2">&quot;app-redis&quot;</span> <span class="se">\</span>
+    -s <span class="nv">CONTAINER_NAME</span><span class="o">=</span><span class="s2">&quot;container-redis&quot;</span> <span class="se">\</span>
+    -s <span class="nv">DOCKER_TAG</span><span class="o">=</span><span class="s2">&quot;5.0-rc&quot;</span> <span class="se">\</span>
+    -s <span class="nv">PORT_NAME</span><span class="o">=</span><span class="s2">&quot;redis-port&quot;</span> <span class="se">\</span>
+    -s <span class="nv">SERVICE_PORT</span><span class="o">=</span><span class="m">7777</span>
+</pre></div>
+
+
+<p>This will output the rendered template to your console, you can use this to validate that your result makes sense.
+Now, as you can see it becomes quite tedious to enter all those values in the command line every time we have to
+render a template. A better option is to use the <code>-i</code> argument, which allows you to load a <code>.env</code> file containing
+your values. It can also be combined with <code>-s</code> for convenience, which allows you to set or override values.</p>
+<p>Here's an example of <code>.env</code> file:</p>
+<p><strong><code>base.env</code></strong></p>
+<div class="highlight"><pre><span></span>DEPLOYMENT_NAME=&quot;redis-deployment&quot;
+SERVICE_NAME=&quot;redis-service&quot;
+STAGE=&quot;staging&quot;
+APP_LABEL=&quot;app-redis&quot;
+CONTAINER_NAME=&quot;container-redis&quot;
+DOCKER_TAG=&quot;5.0-rc&quot;
+PORT_NAME=&quot;redis-port&quot;
+SERVICE_PORT=7777
+</pre></div>
+
+
+<p>With this we can simply run the command below to achieve the same result as earlier.</p>
+<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml
+</pre></div>
+
+
+<p>Or maybe we want to change the <code>SERVICE_PORT</code>.</p>
+<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml -s <span class="nv">SERVICE_PORT</span><span class="o">=</span><span class="m">8888</span>
+</pre></div>
+
+
+<p>And then, once you are satisfied with your templates you can pipe the output tu <code>kubectl</code> to apply your changes
+directly on your cluster.</p>
+<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml <span class="p">|</span> kubectl apply -f -
+</pre></div>
+
+
+<p>So that was the introduction to <code>kubetpl</code> basics. Here are some things you might want to try next:</p>
+<ul>
+<li>Overriding the number of replicas for each stage.</li>
+<li>Trying different tags for your images.</li>
+<li>Setting up your container's environment variables.</li>
+<li>Configuring your domain names per stage.</li>
+<li>Etc.</li>
+</ul>
     </div>
 
     <footer>

@@ -1,3 +1,5 @@
+.PHONY: content full-content
+
 default:
 	@echo "make content: Generate content"
 	@echo "make full-content: Delete previous content and generate"
