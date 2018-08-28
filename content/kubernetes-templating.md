@@ -97,7 +97,7 @@ the `render` command to, you guessed it, render a template, we can also pass val
 argument, let's try it:
 
 ```bash
-kubetpl render resources.yaml \
+$ kubetpl render resources.yaml \
     -s DEPLOYMENT_NAME="redis-deployment" \
     -s SERVICE_NAME="redis-service" \
     -s STAGE="staging" \
@@ -131,13 +131,13 @@ SERVICE_PORT=7777
 With this we can simply run the command below to achieve the same result as earlier.
 
 ```bash
-kubetpl render -i base.env resources.yaml
+$ kubetpl render -i base.env resources.yaml
 ```
 
 Or maybe we want to change the `SERVICE_PORT` and `DOCKER_TAG`.
 
 ```bash
-kubetpl render -i base.env resources.yaml \
+$ kubetpl render -i base.env resources.yaml \
     -s SERVICE_PORT=8888 \
     -s DOCKER_TAG="4.0.11"
 ```
@@ -146,7 +146,7 @@ And then, once you are satisfied with your templates you can pipe the output tu 
 directly on your cluster.
 
 ```bash
-kubetpl render -i base.env resources.yaml | kubectl apply -f -
+$ kubetpl render -i base.env resources.yaml | kubectl apply -f -
 ```
 
 So that was the introduction to `kubetpl` basics. Here are some things you might want to try next:

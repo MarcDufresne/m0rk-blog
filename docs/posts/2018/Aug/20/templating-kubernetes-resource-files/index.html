@@ -134,7 +134,7 @@ templating (note the <code># kubetpl:syntax:$</code> line at the beginning).</p>
 <p>As you can see we can use variables for any value inside the file. Now let's render this template. <code>kubetpl</code> provides
 the <code>render</code> command to, you guessed it, render a template, we can also pass values for our variables using the <code>-s</code>
 argument, let's try it:</p>
-<div class="highlight"><pre><span></span>kubetpl render resources.yaml <span class="se">\</span>
+<div class="highlight"><pre><span></span>$ kubetpl render resources.yaml <span class="se">\</span>
     -s <span class="nv">DEPLOYMENT_NAME</span><span class="o">=</span><span class="s2">&quot;redis-deployment&quot;</span> <span class="se">\</span>
     -s <span class="nv">SERVICE_NAME</span><span class="o">=</span><span class="s2">&quot;redis-service&quot;</span> <span class="se">\</span>
     -s <span class="nv">STAGE</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span> <span class="se">\</span>
@@ -164,12 +164,12 @@ SERVICE_PORT=7777
 
 
 <p>With this we can simply run the command below to achieve the same result as earlier.</p>
-<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml
+<div class="highlight"><pre><span></span>$ kubetpl render -i base.env resources.yaml
 </pre></div>
 
 
 <p>Or maybe we want to change the <code>SERVICE_PORT</code> and <code>DOCKER_TAG</code>.</p>
-<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml <span class="se">\</span>
+<div class="highlight"><pre><span></span>$ kubetpl render -i base.env resources.yaml <span class="se">\</span>
     -s <span class="nv">SERVICE_PORT</span><span class="o">=</span><span class="m">8888</span> <span class="se">\</span>
     -s <span class="nv">DOCKER_TAG</span><span class="o">=</span><span class="s2">&quot;4.0.11&quot;</span>
 </pre></div>
@@ -177,7 +177,7 @@ SERVICE_PORT=7777
 
 <p>And then, once you are satisfied with your templates you can pipe the output tu <code>kubectl</code> to apply your changes
 directly on your cluster.</p>
-<div class="highlight"><pre><span></span>kubetpl render -i base.env resources.yaml <span class="p">|</span> kubectl apply -f -
+<div class="highlight"><pre><span></span>$ kubetpl render -i base.env resources.yaml <span class="p">|</span> kubectl apply -f -
 </pre></div>
 
 
