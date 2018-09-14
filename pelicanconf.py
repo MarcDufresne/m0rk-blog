@@ -35,7 +35,7 @@ CATEGORY_SAVE_AS = 'category/{slug}/index.html'
 LINKS = (('GitHub', 'https://github.com/MarcDufresne'),)
 
 # Social widget
-SOCIAL = (('GitHub', 'https://github.com/MarcDufresne'),)
+SOCIAL = ()
 
 DEFAULT_PAGINATION = 10
 
@@ -46,6 +46,9 @@ GOOGLE_ANALYTICS = "UA-49795505-2"
 
 MEDIUS_AUTHORS = {
     "MarcDufresne": {
-        "image": "https://avatars0.githubusercontent.com/u/599102?s=120&v=4"
+        "image": "https://avatars0.githubusercontent.com/u/599102?s=120&v=4",
+        "links": (
+            ("github", "https://github.com/MarcDufresne"),
+        )
     }
 }
