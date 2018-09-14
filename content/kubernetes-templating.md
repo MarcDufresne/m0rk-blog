@@ -2,6 +2,7 @@ Title: Templating Kubernetes Resource Files
 Date: 2018-08-20 22:00
 Category: Kubernetes
 Tags: kubernetes, kubetpl
+Cover: https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/banners/kubernetes-templating.png
 
 
 When deploying web applications, or any other type of application, it is

@@ -2,6 +2,7 @@ Title: Deploying on Kubernetes using CircleCI and Kubetpl
 Date: 2018-08-21 22:00
 Category: Kubernetes
 Tags: kubernetes, circleci, kubetpl
+Cover: https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/banners/circleci-kubetpl-deployment.png
 
 In a [previous article]({filename}/kubernetes-templating.md) we saw how to turn our Kubernetes
 resource files into configurable templates using `kubetpl`. This time we will be going a bit further

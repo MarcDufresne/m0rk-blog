@@ -52,3 +52,13 @@ MEDIUS_AUTHORS = {
         )
     }
 }
+
+MEDIUS_CATEGORIES = {
+    "Kubernetes": {
+        "description": "Guides about Kubernetes",
+        "logo": "https://github.com/MarcDufresne/m0rk-blog/raw/master/"
+                "m0rk-theme/static/img/categories/kubernetes_logo_border.png",
+        "thumbnail": "https://github.com/MarcDufresne/m0rk-blog/raw/master/"
+                     "m0rk-theme/static/img/categories/kubernetes_logo_border.png"
+    }
+}
