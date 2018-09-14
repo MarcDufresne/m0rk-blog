@@ -51,7 +51,58 @@
     </div>
 
     <div class="entry-content">
-        <p><em>Coming soon...</em></p>
+        <p>In a <a href="../../../../../posts/2018/Aug/20/templating-kubernetes-resource-files/">previous article</a> we saw how to turn our Kubernetes
+resource files into configurable templates using <code>kubetpl</code>. This time we will be going a bit further
+and integrating <code>kubetpl</code> templates into a CircleCI configuration. This is a good way to deploy new versions
+of your app automatically when new code is pushed. A great start for a Continuous Delivery (CD) system.</p>
+<p>First, you will have to use a Docker image with <code>kubetpl</code> and <code>kubectl</code> installed, I recommend you use
+my own image, <code>marcdufresne/kubetpl-base</code> which has both those tools installed already and is based on Debian.
+You can check the Dockerfile used to build it on the
+<a href="https://github.com/MarcDufresne/m0rk-blog-examples/tree/master/kubetpl-circleci-deploy">blog's examples repo</a>.
+Using this image is quite simple, just add the <code>docker</code> section in your job definition, like so:</p>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">docker</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">marcdufresne/kubetpl-base:0.7.1</span>
+</pre></div>
+
+
+<p>Alternatively you can create your own image, or simply run the <code>kubectl</code> and <code>kubetpl</code> installation steps directly
+from your CircleCI configuration.</p>
+<p>Then, proceed with doing a code <code>checkout</code> and any other steps you might want to do before deployment.
+For example, if your app's Docker image isn't built and pushed yet you could do this here.</p>
+<p>Now we only have two more steps, the first one will be configuring your cluster info and endpoints for <code>kubectl</code>.
+To do this I recommend you prepare your <code>config.yaml</code> file and store the Base64 encoded contents in a
+CircleCI Environment Variable (CircleCI Project Settings &gt; Build Settings &gt; Environment Variables).
+Here's how you can do this on your local machine:</p>
+<div class="highlight"><pre><span></span>$ cat my_kubernetes_config.yaml <span class="p">|</span> base64
+</pre></div>
+
+
+<p>Then in your CircleCI configuration file add the following to your job steps, assuming your Kubernetes Cluster config
+is under the <code>KUBE_CONFIG</code> environment variable.</p>
+<div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">run</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Create Kube config file</span>
+  <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+    <span class="no">mkdir -p ~/.kube/</span>
+    <span class="no">echo -n $KUBE_CONFIG | base64 -d &gt;&gt; ~/.kube/config</span>
+</pre></div>
+
+
+<p>Lastly, now that <code>kubectl</code> is properly configured it's time to render your Kubernetes resource template and apply
+it to your cluster. The example below does just that and assumes your app's Docker image tag is the commit's hash,
+which is available under <code>CIRCLE_SHA1</code>.</p>
+<div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">run</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Deploy to Kubernetes</span>
+  <span class="l l-Scalar l-Scalar-Plain">command</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+    <span class="no">kubetpl render -i base.env resources.yaml \</span>
+      <span class="no">-s DOCKER_TAG=$CIRCLE_SHA1</span>
+      <span class="no">| kubectl apply -f -</span>
+</pre></div>
+
+
+<p>And that's it, your Kubernetes cluster is now updated and your app will be deployed. Additionally, you can repeat the
+last step for any other template you may have, like Services and Ingresses.</p>
+<p>You can find the full example of the above files on the
+<a href="https://github.com/MarcDufresne/m0rk-blog-examples/tree/master/kubetpl-circleci-deploy">blog's examples repo</a>.</p>
     </div>
 
     <footer>
