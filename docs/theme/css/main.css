@@ -383,7 +383,7 @@ div.article-header-container div.background-image-container div.background-image
     height: auto;
     position: relative;
     float: left;
-    overflow-x: hidden;
+    overflow: hidden;
     margin: 20px 0 40px 0;
     max-height: 360px;
 }
