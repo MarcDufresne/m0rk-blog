@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = u'MarcDufresne'
-SITENAME = u'DevOps Blog'
+SITENAME = u'MarcDufresne\'s DevOps Blog'
 SITEURL = ''
 
 PATH = 'content'
@@ -60,5 +60,12 @@ MEDIUS_CATEGORIES = {
                 "m0rk-theme/static/img/categories/kubernetes_logo_border.png",
         "thumbnail": "https://github.com/MarcDufresne/m0rk-blog/raw/master/"
                      "m0rk-theme/static/img/categories/kubernetes_logo_border.png"
+    },
+    "Python": {
+        "description": "Guides about Python and related tools",
+        "logo": "https://github.com/MarcDufresne/m0rk-blog/raw/master/"
+                "m0rk-theme/static/img/categories/python_logo.png",
+        "thumbnail": "https://github.com/MarcDufresne/m0rk-blog/raw/master/"
+                     "m0rk-theme/static/img/categories/python_logo.png"
     }
 }

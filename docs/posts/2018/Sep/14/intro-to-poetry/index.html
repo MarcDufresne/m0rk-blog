@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Intro to Poetry</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../../../../theme/css/main.css" />
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1277629475587048",
+            enable_page_level_ads: true
+          });
+        </script>
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../../../../../" class="pure-menu-heading  pure-menu-link">MarcDufresne's DevOps Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+            <li class="pure-menu-item"><a href="../../../../../category/kubernetes/" class="pure-menu-link">Kubernetes</a></li>
+            <li class="pure-menu-item pure-menu-selected"><a href="../../../../../category/python/" class="pure-menu-link">Python</a></li>
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="../../../../../category/python/"><img src="https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/categories/python_logo.png " class="post-avatar" alt="Python"></a>
+            </div>
+<div class="pure-u-3-4 meta-data">
+    <a href="../../../../../category/python/" class="category">Python</a><br />
+
+    <a class="author" href="../../../../../author/marcdufresne/">MarcDufresne</a>
+    &mdash; <abbr title="2018-09-14T22:00:00-04:00">Fri 14 September 2018</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/banners/intro-to-poetry.png);">
+                <img src="https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/banners/intro-to-poetry.png" alt="Intro to Poetry">
+                <div class="title">
+                <h1>
+                    Intro to Poetry
+                </h1>
+                <h2>
+                    Python Packaging and Dependency Management Made Easy
+                </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p><a href="https://poetry.eustace.io">Poetry</a> is a Python packaging and dependency management tool that works really well
+and will bring you into the future of Python project management. The goal of this article is to show you what
+Poetry can do, and how to do it.</p>
+<p>To install Poetry you can simply use <code>pip install -U poetry</code>, this will install the latest version on your system.
+You might have to do a <code>--user</code> install if you're using the Python distribution that is pre-installed on your machine.</p>
+<p>To demonstrate Poetry we will be going through some integration steps in a Python project. For the sake of simplicity
+the project we start with contains only one Python file in a top-level package, here's is the structure of the
+project and the contents of our Python file:</p>
+<div class="highlight"><pre><span></span>.
+└── example_app
+    ├── app.py
+    └── __init__.py
+</pre></div>
+
+
+<p><strong>app.py</strong></p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">click</span>
+
+
+<span class="k">def</span> <span class="nf">demo</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">click</span><span class="o">.</span><span class="n">progressbar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span> <span class="k">as</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">demo</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Now that we have our project and Poetry is installed, let's get to it. First, you need to create the project's
+<code>pyproject.toml</code> file at the root of your project. This file contains metadata about your project and all
+dependencies it might have. To create this file simply run <code>poetry init</code> from the root of the project and follow the
+prompts, values between square brackets are defaults.</p>
+<p>Once you are done with the prompts you will notice the new <code>pyproject.toml</code> file at the root of your project. You
+are now ready to add any dependencies your project might need. In our case we use the library
+<a href="http://click.pocoo.org/5/"><code>click</code></a>. You can add it with <code>poetry add</code>, like so:</p>
+<div class="highlight"><pre><span></span>$ poetry add click
+
+Using version ^6.7 <span class="k">for</span> click
+
+Updating dependencies
+Resolving dependencies... <span class="o">(</span><span class="m">0</span>.3s<span class="o">)</span>
+
+
+Package operations: <span class="m">1</span> install, <span class="m">0</span> updates, <span class="m">0</span> removals
+
+Writing lock file
+
+  - Installing click <span class="o">(</span><span class="m">6</span>.7<span class="o">)</span>
+</pre></div>
+
+
+<p><code>click</code> will be added to the <code>pyproject.toml</code> and Poetry will update the <code>pyproject.lock</code> file.</p>
+<p>Note that adding a package will create your project's virtual environment but if at any time you want to install
+your venv manually you can do so with <code>poetry install</code> which will install your dependencies into the
+project's venv. <code>install</code> will not however install your own project in the environment, to do this you need to use
+<code>poetry develop</code>, which does all of what <code>install</code> does but also symlinks your project in the venv.</p>
+<p>Poetry also supports defining "dev" dependencies, those are libraries that will need to develop and test, but that
+are not required to run your app. You can add those dependencies with <code>poetry add --dev &lt;library&gt;</code>. Usually, you
+will find <code>flake8</code>, <code>pytest</code> and other tools in this section.</p>
+<p>So, now that we have our code and Poetry-managed virtual environment ready we can run it. Poetry provides two useful
+commands for this scenario, they are <code>poetry run</code> and <code>poetry shell</code>.</p>
+<ul>
+<li><code>run</code> will run a given command from inside the Poetry venv. So if we wanted to run our app we could do
+<code>poetry run python example_app/app.py</code>.</li>
+<li><code>shell</code> mimics the behaviour of activating a venv. This allows you to run commands from inside the venv without using
+<code>poetry run</code> all the time.</li>
+</ul>
+<p>And finally, one great reason to be using Poetry is that it can build and publish your library or app if you need
+it to.
+Simply use <code>poetry build</code> and <code>poetry publish</code>, or <code>poetry publish --build</code> to do both at the same time! You will be
+prompted to enter your PyPI credentials when publishing, and once you do that your package will upload to PyPI.</p>
+<p>Publishing is completely configurable so you don't have to enter your username and password all the time. And it can
+even publish to other repos, even private ones.</p>
+<p><strong>Bonus</strong>: Poetry can show you the outdated dependencies in your project if you do <code>poetry show --outdated</code> or a
+dependency graph if you do <code>poetry show --tree</code>.</p>
+<p>For more information consult the official <a href="https://poetry.eustace.io/docs/">Poetry documentation</a>.</p>
+<p>You can find the full example of the above files on the
+<a href="https://github.com/MarcDufresne/m0rk-blog-examples/tree/master/intro-to-poetry">blog's examples repo</a>.</p>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="../../../../../tag/python.html">python</a>
+            <a href="../../../../../tag/poetry.html">poetry</a>
+            <a href="../../../../../tag/packaging.html">packaging</a>
+            <a href="../../../../../tag/dependency-management.html">dependency management</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="../../../../../author/marcdufresne/"><img src="https://avatars0.githubusercontent.com/u/599102?s=120&v=4" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../../../../../author/marcdufresne/">MarcDufresne</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="../../../../../category/python/"><img src="https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/categories/python_logo.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../../../../../category/python/">Python</a></h3>
+                        <p class="author-description">
+                          Guides about Python and related tools
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../../../../../" title="MarcDufresne's DevOps Blog">MarcDufresne's DevOps Blog</a>
+        <a href="../../../../../category/kubernetes/">Kubernetes</a>
+        <a href="../../../../../category/python/">Python</a>
+        <a href="https://github.com/MarcDufresne">GitHub</a>
+        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GJUKR5ZM9YPSJ">
+            Finding this blog useful? You can donate here!
+        </a>
+
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-49795505-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
