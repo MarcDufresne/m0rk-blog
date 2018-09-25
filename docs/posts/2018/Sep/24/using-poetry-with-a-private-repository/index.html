@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Using Poetry with a Private Repository</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../../../../theme/css/main.css" />
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1277629475587048",
+            enable_page_level_ads: true
+          });
+        </script>
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../../../../../" class="pure-menu-heading  pure-menu-link">MarcDufresne's DevOps Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+            <li class="pure-menu-item"><a href="../../../../../category/kubernetes/" class="pure-menu-link">Kubernetes</a></li>
+            <li class="pure-menu-item pure-menu-selected"><a href="../../../../../category/python/" class="pure-menu-link">Python</a></li>
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="../../../../../category/python/"><img src="https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/categories/python_logo.png " class="post-avatar" alt="Python"></a>
+            </div>
+<div class="pure-u-3-4 meta-data">
+    <a href="../../../../../category/python/" class="category">Python</a><br />
+
+    <a class="author" href="../../../../../author/marcdufresne/">MarcDufresne</a>
+    &mdash; <abbr title="2018-09-24T22:00:00-04:00">Mon 24 September 2018</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/banners/intro-to-poetry.png);">
+                <img src="https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/banners/intro-to-poetry.png" alt="Using Poetry with a Private Repository">
+                <div class="title">
+                <h1>
+                    Using Poetry with a Private Repository
+                </h1>
+                <h2>
+                    How to Install and Publish Packages
+                </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>In a <a href="../../../../../posts/2018/Sep/14/intro-to-poetry/">previous article</a> we went through the basic configuration and usage
+steps for <a href="https://poetry.eustace.io">Poetry</a>. One thing that is often needed in professional setting is
+access to password-protected private package indexes, luckily Poetry can do that, lets see how we can go about it.</p>
+<p>We will be reusing the Poetry example from the
+<a href="https://github.com/MarcDufresne/m0rk-blog-examples/tree/master/intro-to-poetry">blog's examples repo</a>
+as a base for this article. Any required changes wil be detailed.</p>
+<h4>Downloading and installing packages</h4>
+<p>Poetry uses configuration files to store custom indexes' credentials, so most of our work will be done using
+<code>poetry config</code> and some changes to our <code>pyproject.toml</code> file.</p>
+<p>First, let's add a reference to our repository in the <code>pyproject.toml</code> file (above the
+<code>tool.poetry.dependencies</code> section), add the section below to your file and make sure to replace the
+values to fit your setup.</p>
+<div class="highlight"><pre><span></span><span class="k">[[tool.poetry.source]]</span>
+<span class="na">name</span> <span class="o">=</span> <span class="s">&quot;my-custom-repo&quot;  # This name will be used in the configuration to retreive the proper credentials</span>
+<span class="na">url</span> <span class="o">=</span> <span class="s">&quot;https://my.customrepo.com/simple/&quot;  # URL used to download your packages from</span>
+</pre></div>
+
+
+<p>Then, configure the credentials for your repo. Note that this only needs to be done once per
+repo, not per project.</p>
+<div class="highlight"><pre><span></span>$ poetry config http-basic.my-custom-repo user1 secretp4ssword!
+</pre></div>
+
+
+<p>Once those two steps are done, you can use <code>poetry add</code> to install a package from your newly configured custom index.
+So,</p>
+<div class="highlight"><pre><span></span>$ poetry add my_package
+</pre></div>
+
+
+<p>Poetry should find and install your package and update your <code>pyproject.toml</code> file with this new dependency.
+You can add as many package indexes as you need without issue.</p>
+<h4>Publishing your own package</h4>
+<p>Now, chances are that if you have an internal package index you most likely will need a way to publish those packages.
+Since Poetry does away with the <code>setup.py</code> file you need a new way to build and publish your custom packages, enter
+<code>poetry build</code> and <code>poetry publish</code>.</p>
+<p>The <code>build</code> command speaks for itself, when invoked it will build a source and a wheel release of your project in
+the <code>dist</code> directory.</p>
+<p>To use the <code>publish</code> command you will first need to configure your credentials (same as above, with <code>http-basic</code>) and
+the repo's URL, where to upload your new files. You can do so with the command below:</p>
+<div class="highlight"><pre><span></span>$ poetry config repositories.my-custom-repo https://my.customrepo.com/simple/
+</pre></div>
+
+
+<p>Once those two configuration values are set you can invoke the <code>publish</code> command:</p>
+<div class="highlight"><pre><span></span>$ poetry publish -r my-custom-repo
+</pre></div>
+
+
+<p>This will take whatever is in the <code>dist</code> directory and upload it to your custom index (specified using <code>-r</code>).
+You can skip the <code>build</code> command by adding the <code>--build</code> option to your <code>publish</code> command. This will build and publish
+at the same time.</p>
+<p><strong>PRO TIP</strong>: You can also use the <code>poetry version</code> command to automatically change your project's version number!</p>
+<p>That's it! You are done with installing and publishing private packages, for more information
+consult the official <a href="https://poetry.eustace.io/docs/">Poetry documentation</a>.</p>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="../../../../../tag/python.html">python</a>
+            <a href="../../../../../tag/poetry.html">poetry</a>
+            <a href="../../../../../tag/packaging.html">packaging</a>
+            <a href="../../../../../tag/private-repositories.html">private repositories</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="../../../../../author/marcdufresne/"><img src="https://avatars0.githubusercontent.com/u/599102?s=120&v=4" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../../../../../author/marcdufresne/">MarcDufresne</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="../../../../../category/python/"><img src="https://github.com/MarcDufresne/m0rk-blog/raw/master/m0rk-theme/static/img/categories/python_logo.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../../../../../category/python/">Python</a></h3>
+                        <p class="author-description">
+                          Guides about Python and related tools
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../../../../../" title="MarcDufresne's DevOps Blog">MarcDufresne's DevOps Blog</a>
+        <a href="../../../../../category/kubernetes/">Kubernetes</a>
+        <a href="../../../../../category/python/">Python</a>
+        <a href="https://github.com/MarcDufresne">GitHub</a>
+        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GJUKR5ZM9YPSJ">
+            Finding this blog useful? You can donate here!
+        </a>
+
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-49795505-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
