@@ -1,4 +1,5 @@
 Title: Privacy Policy
+Status: hidden
 
 **Effective date**: September 25, 2018
 

@@ -32,7 +32,10 @@ CATEGORY_URL = 'category/{slug}/'
 CATEGORY_SAVE_AS = 'category/{slug}/index.html'
 
 # Blogroll
-LINKS = (('GitHub', 'https://github.com/MarcDufresne'),)
+LINKS = (
+    ('GitHub', 'https://github.com/MarcDufresne'),
+    ('Privacy Policy', '/pages/privacy-policy/'),
+)
 
 # Social widget
 SOCIAL = ()
