@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = u'MarcDufresne'
 SITENAME = u'MarcDufresne\'s DevOps Blog'
-SITEURL = ''
+SITEURL = 'https://m0rk.space'
 
 PATH = 'content'
 OUTPUT_PATH = 'docs/'
@@ -21,6 +21,12 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
+
+# RSS Config
+FEED_DOMAIN = SITEURL
+FEED_RSS = 'rss/feed.xml'
+FEED_ALL_RSS = 'rss/feed.all.xml'
+CATEGORY_FEED_RSS = 'rss/feed.%s.xml'
 
 ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
 ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
