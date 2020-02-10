@@ -8,5 +8,5 @@ content:
 	poetry run pelican content
 
 full-content:
-	cd docs && ls | grep -v CNAME | xargs rm -rf
+	cd docs && ls | grep -v CNAME | grep -v 'ads.txt' | xargs rm -rf
 	poetry run pelican content
